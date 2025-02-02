@@ -17,9 +17,12 @@ const courseSchema = new mongoose.Schema(
       trim: true,
       validate: {
         validator: function () {
+          // If the course is published, description is required
           return (
             !this.isPublished ||
-            (this.description && this.description.length > 0)
+            (this.isPublished &&
+              this.description &&
+              this.description.length > 0)
           );
         },
         message: "Description is required for publishing.",
@@ -30,7 +33,11 @@ const courseSchema = new mongoose.Schema(
       default: "",
       validate: {
         validator: function () {
-          return !this.isPublished || (this.image && this.image.length > 0);
+          // If the course is published, image is required
+          return (
+            !this.isPublished ||
+            (this.isPublished && this.image && this.image.length > 0)
+          );
         },
         message: "Image is required for publishing.",
       },
@@ -45,9 +52,22 @@ const courseSchema = new mongoose.Schema(
       min: [0, "Price cannot be negative"],
       validate: {
         validator: function () {
-          return !this.isPublished || (this.price && this.price > 0);
+          if (this.isPublished) {
+            return this.isFree ? this.price === 0 : this.price > 0;
+          }
+          return true;
         },
-        message: "Price must be greater than 0 for publishing.",
+        message: "Price must be greater than 0 unless the course is free.",
+      },
+    },
+    isFree: {
+      type: Boolean,
+      default: false,
+      validate: {
+        validator: function () {
+          return !this.isPublished || this.isFree !== undefined;
+        },
+        message: "isFree is required for published courses.",
       },
     },
   },
