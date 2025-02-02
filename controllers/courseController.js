@@ -28,25 +28,48 @@ const createCourse = async (req, res) => {
   }
 };
 
+const updateCourse = async (req, res) => {
+  try {
+    const course = req.course;
+    const updatedCourse = req.body;
+
+    const allowedUpdates = ["title", "description", "image", "isFree", "price"];
+
+    for (const field of allowedUpdates) {
+      if (updatedCourse[field] !== undefined) {
+        course[field] = updatedCourse[field];
+      }
+    }
+
+    await course.save();
+
+    res.status(200).json({
+      message: "Course updated successfully",
+      course,
+    });
+  } catch (error) {
+    console.error("Course updating error: ", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const publishCourse = async (req, res) => {
   try {
-    const courseId = req.params.id;
-    const userId = req.user.userId;
-
-    const course = await COURSE.findById(courseId);
-
-    if (!course) {
-      return res.status(404).json({ message: "Course not found" });
-    }
-
-    if (course.userId.toString() !== userId) {
-      return res
-        .status(403)
-        .json({ message: "You are not authorized to publish this course" });
-    }
+    const course = req.course;
 
     if (course.isPublished) {
       return res.status(400).json({ message: "Course is already published" });
+    }
+
+    if (
+      !course.title ||
+      !course.description ||
+      !course.image ||
+      (!course.isFree && !course.price)
+    ) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
     }
 
     course.isPublished = true;
@@ -65,20 +88,7 @@ const publishCourse = async (req, res) => {
 
 const unpublishCourse = async (req, res) => {
   try {
-    const courseId = req.params.id;
-    const userId = req.user.userId;
-
-    const course = await COURSE.findById(courseId);
-
-    if (!course) {
-      return res.status(404).json({ message: "Course not found" });
-    }
-
-    if (course.userId.toString() !== userId) {
-      return res
-        .status(403)
-        .json({ message: "You are not authorized to unpublish this course" });
-    }
+    const course = req.course;
 
     if (!course.isPublished) {
       return res.status(400).json({ message: "Course is already unpublished" });
@@ -100,6 +110,7 @@ const unpublishCourse = async (req, res) => {
 
 module.exports = {
   createCourse,
+  updateCourse,
   publishCourse,
   unpublishCourse,
 };

@@ -15,9 +15,9 @@ const courseSchema = new mongoose.Schema(
     description: {
       type: String,
       trim: true,
+      default: "",
       validate: {
         validator: function () {
-          // If the course is published, description is required
           return (
             !this.isPublished ||
             (this.isPublished &&
@@ -33,7 +33,6 @@ const courseSchema = new mongoose.Schema(
       default: "",
       validate: {
         validator: function () {
-          // If the course is published, image is required
           return (
             !this.isPublished ||
             (this.isPublished && this.image && this.image.length > 0)
