@@ -1,9 +1,9 @@
 const express = require("express");
 const authenticateJWT = require("../middlewares/authenticateJWT");
-const { createNote } = require("../controllers/noteController");
+const { createCourse } = require("../controllers/courseController");
 
 const router = express.Router();
 
-router.post("/create", authenticateJWT, createNote);
+router.post("/create", authenticateJWT, createCourse);
 
 module.exports = router;
