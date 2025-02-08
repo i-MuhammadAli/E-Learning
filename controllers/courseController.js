@@ -1,12 +1,14 @@
 const COURSE = require("../models/courseModal");
-require("dotenv").config();
 
 const createCourse = async (req, res) => {
   try {
     const { title } = req.body;
 
     if (!title) {
-      return res.status(400).json({ message: "Title is required" });
+      return res.status(400).json({
+        success: false,
+        message: "Title is required",
+      });
     }
 
     const course = new COURSE({
@@ -17,14 +19,16 @@ const createCourse = async (req, res) => {
     await course.save();
 
     res.status(201).json({
+      success: true,
       message: "Course added successfully",
-      course: {
-        title,
-      },
+      data: course,
     });
   } catch (error) {
     console.error("course adding error: ", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error",
+    });
   }
 };
 
@@ -35,12 +39,16 @@ const readUserCourses = async (req, res) => {
     const courses = await COURSE.find({ userId });
 
     res.status(200).json({
+      success: true,
       message: "User courses retrieved successfully",
-      courses,
+      data: courses,
     });
   } catch (error) {
     console.error("Error retrieving user courses:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error",
+    });
   }
 };
 
@@ -49,12 +57,16 @@ const readCourse = async (req, res) => {
     const course = req.course;
 
     res.status(200).json({
+      success: true,
       message: "Course retrieved successfully",
-      course,
+      data: course,
     });
   } catch (error) {
     console.error("Course reading error: ", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error",
+    });
   }
 };
 
@@ -71,6 +83,7 @@ const updateCourse = async (req, res) => {
 
     if (invalidFields.length > 0) {
       return res.status(400).json({
+        success: false,
         message: `Invalid update fields: ${invalidFields.join(", ")}`,
       });
     }
@@ -84,12 +97,16 @@ const updateCourse = async (req, res) => {
     await course.save();
 
     res.status(200).json({
+      success: true,
       message: "Course updated successfully",
-      course,
+      data: course,
     });
   } catch (error) {
     console.error("Course updating error: ", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: error?.message || "Internal server error",
+    });
   }
 };
 
@@ -98,17 +115,9 @@ const publishCourse = async (req, res) => {
     const course = req.course;
 
     if (course.isPublished) {
-      return res.status(400).json({ message: "Course is already published" });
-    }
-
-    if (
-      !course.title ||
-      !course.description ||
-      !course.image ||
-      (!course.isFree && !course.price)
-    ) {
       return res.status(400).json({
-        message: "All fields are required",
+        success: false,
+        message: "Course is already published",
       });
     }
 
@@ -117,12 +126,16 @@ const publishCourse = async (req, res) => {
     await course.save();
 
     res.status(200).json({
+      success: true,
       message: "Course published successfully",
-      course,
+      data: course,
     });
   } catch (error) {
     console.error("course publishing error: ", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: error?.message || "Internal server error",
+    });
   }
 };
 
@@ -131,7 +144,10 @@ const unpublishCourse = async (req, res) => {
     const course = req.course;
 
     if (!course.isPublished) {
-      return res.status(400).json({ message: "Course is already unpublished" });
+      return res.status(400).json({
+        success: false,
+        message: "Course is already unpublished",
+      });
     }
 
     course.isPublished = false;
@@ -139,12 +155,16 @@ const unpublishCourse = async (req, res) => {
     await course.save();
 
     res.status(200).json({
+      success: true,
       message: "Course unpublished successfully",
-      course,
+      data: course,
     });
   } catch (error) {
     console.error("course unpublishing error: ", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error",
+    });
   }
 };
 
@@ -155,12 +175,16 @@ const deleteCourse = async (req, res) => {
     await course.deleteOne();
 
     res.status(200).json({
+      success: true,
       message: "Course deleted successfully",
-      course,
+      data: course,
     });
   } catch (error) {
     console.error("course deleting error: ", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error",
+    });
   }
 };
 
