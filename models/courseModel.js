@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const MODULE = require("./moduleModal");
+const MODULE = require("./moduleModel");
 
 const courseSchema = new mongoose.Schema(
   {

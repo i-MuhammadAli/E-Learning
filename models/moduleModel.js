@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const CHAPTER = require("./chapterModel");
 
 const moduleSchema = new mongoose.Schema(
   {
@@ -43,6 +44,15 @@ const moduleSchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
+);
+
+moduleSchema.pre(
+  "deleteOne",
+  { document: true, query: false },
+  async function (next) {
+    await CHAPTER.deleteMany({ moduleId: this._id });
+    next();
+  }
 );
 
 module.exports = mongoose.model("Module", moduleSchema);
