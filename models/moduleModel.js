@@ -55,4 +55,19 @@ moduleSchema.pre(
   }
 );
 
+// moduleSchema.pre("save", async function (next) {
+//   if (this.isModified("isPublished") && !this.isPublished) {
+//     const remainingPublishedModules = await this.constructor.countDocuments({
+//       courseId: this.courseId,
+//       isPublished: true,
+//     });
+
+//     if (remainingPublishedModules === 1) {
+//       const COURSE = mongoose.model("Course");
+//       await COURSE.findByIdAndUpdate(this.courseId, { isPublished: false });
+//     }
+//   }
+//   next();
+// });
+
 module.exports = mongoose.model("Module", moduleSchema);

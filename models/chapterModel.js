@@ -58,4 +58,19 @@ const chapterSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// chapterSchema.pre("save", async function (next) {
+//   if (this.isModified("isPublished") && !this.isPublished) {
+//     const remainingPublishedModules = await this.constructor.countDocuments({
+//       moduleId: this.moduleId,
+//       isPublished: true,
+//     });
+
+//     if (remainingPublishedModules === 1) {
+//       const MODULE = mongoose.model("Module");
+//       await MODULE.findByIdAndUpdate(this.moduleId, { isPublished: false });
+//     }
+//   }
+//   next();
+// });
+
 module.exports = mongoose.model("Chapter", chapterSchema);
