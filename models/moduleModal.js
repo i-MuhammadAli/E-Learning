@@ -28,19 +28,6 @@ const moduleSchema = new mongoose.Schema(
         message: "Description is required for publishing",
       },
     },
-    video: {
-      type: String,
-      default: "",
-      validate: {
-        validator: function () {
-          return (
-            !this.isPublished ||
-            (this.isPublished && this.video && this.video.length > 0)
-          );
-        },
-        message: "Video is required for publishing",
-      },
-    },
     position: {
       type: Number,
       min: [0, "Position must be a positive number"],

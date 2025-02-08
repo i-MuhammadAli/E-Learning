@@ -103,13 +103,7 @@ const updateModule = async (req, res) => {
     const module = req.module;
 
     const updatedModule = req.body;
-    const allowedUpdates = [
-      "title",
-      "description",
-      "video",
-      "isFree",
-      "poisiton",
-    ];
+    const allowedUpdates = ["title", "description", "isFree", "poisiton"];
     const attemptedUpdates = Object.keys(updatedModule);
     const invalidFields = attemptedUpdates.filter(
       (field) => !allowedUpdates.includes(field)
