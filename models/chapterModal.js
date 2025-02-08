@@ -14,11 +14,32 @@ const chapterSchema = new mongoose.Schema(
     },
     description: {
       type: String,
+      trim: true,
       default: "",
+      validate: {
+        validator: function () {
+          return (
+            !this.isPublished ||
+            (this.isPublished &&
+              this.description &&
+              this.description.length > 0)
+          );
+        },
+        message: "Description is required for publishing",
+      },
     },
-    videoUrl: {
+    video: {
       type: String,
       default: "",
+      validate: {
+        validator: function () {
+          return (
+            !this.isPublished ||
+            (this.isPublished && this.video && this.video.length > 0)
+          );
+        },
+        message: "Video is required for publishing",
+      },
     },
     position: {
       type: Number,

@@ -30,6 +30,7 @@ const moduleSchema = new mongoose.Schema(
     },
     position: {
       type: Number,
+      required: [true, "Position is required"],
       min: [0, "Position must be a positive number"],
     },
     isPublished: {
