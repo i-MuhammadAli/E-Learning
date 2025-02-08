@@ -34,6 +34,16 @@ const updateCourse = async (req, res) => {
     const updatedCourse = req.body;
 
     const allowedUpdates = ["title", "description", "image", "isFree", "price"];
+    const attemptedUpdates = Object.keys(updatedCourse);
+    const invalidFields = attemptedUpdates.filter(
+      (field) => !allowedUpdates.includes(field)
+    );
+
+    if (invalidFields.length > 0) {
+      return res.status(400).json({
+        message: `Invalid update fields: ${invalidFields.join(", ")}`,
+      });
+    }
 
     for (const field of allowedUpdates) {
       if (updatedCourse[field] !== undefined) {

@@ -1,5 +1,4 @@
 const express = require("express");
-const authenticateJWT = require("../middlewares/authenticateJWT");
 const {
   createCourse,
   updateCourse,
@@ -10,14 +9,11 @@ const courseOwnership = require("../middlewares/courseOwnership");
 
 const router = express.Router();
 
-router.post("/create", authenticateJWT, createCourse);
-router.patch("/:id/update", authenticateJWT, courseOwnership, updateCourse);
-router.patch("/:id/publish", authenticateJWT, courseOwnership, publishCourse);
-router.patch(
-  "/:id/unpublish",
-  authenticateJWT,
-  courseOwnership,
-  unpublishCourse
-);
+router.use("/:id", courseOwnership);
+
+router.post("/create", createCourse);
+router.patch("/:id", updateCourse);
+router.patch("/:id/publish", publishCourse);
+router.patch("/:id/unpublish", unpublishCourse);
 
 module.exports = router;
