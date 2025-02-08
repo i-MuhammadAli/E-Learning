@@ -118,9 +118,26 @@ const unpublishCourse = async (req, res) => {
   }
 };
 
+const deleteCourse = async (req, res) => {
+  try {
+    const course = req.course;
+
+    await course.deleteOne();
+
+    res.status(200).json({
+      message: "Course deleted successfully",
+      course,
+    });
+  } catch (error) {
+    console.error("course deleting error: ", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   createCourse,
   updateCourse,
   publishCourse,
   unpublishCourse,
+  deleteCourse,
 };

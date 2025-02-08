@@ -4,6 +4,7 @@ const {
   updateCourse,
   publishCourse,
   unpublishCourse,
+  deleteCourse,
 } = require("../controllers/courseController");
 const courseOwnership = require("../middlewares/courseOwnership");
 
@@ -15,5 +16,6 @@ router.post("/create", createCourse);
 router.patch("/:id", updateCourse);
 router.patch("/:id/publish", publishCourse);
 router.patch("/:id/unpublish", unpublishCourse);
+router.delete("/:id", deleteCourse);
 
 module.exports = router;
