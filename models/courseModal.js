@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const MODULE = require("./moduleModal");
 
 const courseSchema = new mongoose.Schema(
   {
@@ -25,7 +26,7 @@ const courseSchema = new mongoose.Schema(
               this.description.length > 0)
           );
         },
-        message: "Description is required for publishing.",
+        message: "Description is required for publishing",
       },
     },
     image: {
@@ -38,7 +39,7 @@ const courseSchema = new mongoose.Schema(
             (this.isPublished && this.image && this.image.length > 0)
           );
         },
-        message: "Image is required for publishing.",
+        message: "Image is required for publishing",
       },
     },
     isPublished: {
@@ -56,21 +57,24 @@ const courseSchema = new mongoose.Schema(
           }
           return true;
         },
-        message: "Price must be greater than 0 unless the course is free.",
+        message: "Price must be greater than 0 unless the course is not free",
       },
     },
     isFree: {
       type: Boolean,
       default: false,
-      validate: {
-        validator: function () {
-          return !this.isPublished || this.isFree !== undefined;
-        },
-        message: "isFree is required for published courses.",
-      },
     },
   },
   { timestamps: true }
+);
+
+courseSchema.pre(
+  "deleteOne",
+  { document: true, query: false },
+  async function (next) {
+    await MODULE.deleteMany({ courseId: this._id });
+    next();
+  }
 );
 
 module.exports = mongoose.model("Course", courseSchema);
