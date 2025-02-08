@@ -1,4 +1,4 @@
-const COURSE = require("../models/courseModal");
+const COURSE = require("../models/courseModel");
 
 const courseOwnership = async (req, res, next) => {
   const courseId = req.params.id;
@@ -8,13 +8,16 @@ const courseOwnership = async (req, res, next) => {
     const course = await COURSE.findById(courseId);
 
     if (!course) {
-      return res.status(404).json({ message: "Course not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
     }
 
     if (course.userId.toString() !== userId) {
-      return res
-        .status(403)
-        .json({ message: "You are not authorized to access this course" });
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to access this course",
+      });
     }
 
     req.course = course;
@@ -22,7 +25,8 @@ const courseOwnership = async (req, res, next) => {
   } catch (error) {
     console.error("Course ownership check error:", error);
     return res.status(500).json({
-      message: "Internal server error while checking course ownership",
+      success: false,
+      message: error.message || "Internal server error",
     });
   }
 };

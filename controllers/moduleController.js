@@ -1,4 +1,4 @@
-const MODULE = require("../models/moduleModal");
+const MODULE = require("../models/moduleModel");
 
 const unpublishCourse = async (course) => {
   try {
@@ -22,7 +22,7 @@ const unpublishCourse = async (course) => {
 
 const createModule = async (req, res) => {
   try {
-    const course = req.course;
+    const { course } = req;
     const { title } = req.body;
 
     if (!title) {
@@ -62,7 +62,7 @@ const createModule = async (req, res) => {
 
 const readCourseModules = async (req, res) => {
   try {
-    const course = req.course;
+    const { course } = req;
 
     const modules = await MODULE.find({ courseId: course.id });
 
@@ -82,7 +82,7 @@ const readCourseModules = async (req, res) => {
 
 const readModule = async (req, res) => {
   try {
-    const module = req.module;
+    const { module } = req;
 
     res.status(200).json({
       success: true,
@@ -100,7 +100,7 @@ const readModule = async (req, res) => {
 
 const updateModule = async (req, res) => {
   try {
-    const module = req.module;
+    const { module } = req;
 
     const updatedModule = req.body;
     const allowedUpdates = ["title", "description", "isFree", "poisiton"];
@@ -140,8 +140,7 @@ const updateModule = async (req, res) => {
 
 const publishModule = async (req, res) => {
   try {
-    const moduleId = req.params.id;
-    const module = await MODULE.findById(moduleId);
+    const { module } = req;
 
     if (module.isPublished) {
       return res.status(400).json({
@@ -169,9 +168,7 @@ const publishModule = async (req, res) => {
 
 const unpublishModule = async (req, res) => {
   try {
-    const course = req.course;
-    const moduleId = req.params.id;
-    const module = await MODULE.findById(moduleId);
+    const { course, module } = req;
 
     if (!module.isPublished) {
       return res
@@ -202,8 +199,7 @@ const unpublishModule = async (req, res) => {
 
 const deleteModule = async (req, res) => {
   try {
-    const course = req.course;
-    const module = req.module;
+    const { course, module } = req;
     const deletedPosition = module.position;
 
     if (course.isPublished && module.isPublished) {

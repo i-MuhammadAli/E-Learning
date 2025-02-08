@@ -1,4 +1,4 @@
-const CHAPTER = require("../models/chapterModal");
+const CHAPTER = require("../models/chapterModel");
 
 const findChapter = async (req, res, next) => {
   try {
