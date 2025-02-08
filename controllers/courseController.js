@@ -28,6 +28,36 @@ const createCourse = async (req, res) => {
   }
 };
 
+const readUserCourses = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const courses = await COURSE.find({ userId });
+
+    res.status(200).json({
+      message: "User courses retrieved successfully",
+      courses,
+    });
+  } catch (error) {
+    console.error("Error retrieving user courses:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const readCourse = async (req, res) => {
+  try {
+    const course = req.course;
+
+    res.status(200).json({
+      message: "Course retrieved successfully",
+      course,
+    });
+  } catch (error) {
+    console.error("Course reading error: ", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const updateCourse = async (req, res) => {
   try {
     const course = req.course;
@@ -136,6 +166,8 @@ const deleteCourse = async (req, res) => {
 
 module.exports = {
   createCourse,
+  readUserCourses,
+  readCourse,
   updateCourse,
   publishCourse,
   unpublishCourse,
