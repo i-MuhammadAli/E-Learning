@@ -72,8 +72,22 @@ courseSchema.pre(
   "deleteOne",
   { document: true, query: false },
   async function (next) {
-    await MODULE.deleteMany({ courseId: this._id });
-    next();
+    try {
+      const Module = mongoose.model("Module");
+      const Chapter = mongoose.model("Chapter");
+
+      const modules = await Module.find({ courseId: this._id });
+
+      const moduleIds = modules.map((mod) => mod._id);
+
+      await Chapter.deleteMany({ moduleId: { $in: moduleIds } });
+      await Module.deleteMany({ courseId: this._id });
+
+      next();
+    } catch (error) {
+      console.error("Error deleting modules and chapters:", error);
+      next(error);
+    }
   }
 );
 
