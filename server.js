@@ -9,7 +9,7 @@ const courseRoutes = require("./routes/courseRoutes");
 const moduleRoutes = require("./routes/moduleRoutes");
 const chapterRoutes = require("./routes/chapterRoutes");
 
-const port = process.env.PORT || 3000;
+// const port = process.env.PORT || 3000;
 
 connectDB();
 const app = express();
@@ -28,4 +28,6 @@ app.use("/api/course", courseRoutes);
 app.use("/api/course/:id/module", moduleRoutes);
 app.use("/api/course/:id/module/:id/chapter", chapterRoutes);
 
-app.listen(port, () => console.log(`Server running on port: ${port}`));
+// app.listen(port, () => console.log(`Server running on port: ${port}`));
+
+module.exports = app;
