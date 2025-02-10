@@ -16,10 +16,6 @@ const app = express();
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("API is running successfully!");
-});
-
 app.use("/api/user", userRoutes);
 
 app.use(authenticateJWT);
@@ -29,5 +25,8 @@ app.use("/api/course/:id/module", moduleRoutes);
 app.use("/api/course/:id/module/:id/chapter", chapterRoutes);
 
 // app.listen(port, () => console.log(`Server running on port: ${port}`));
+app.get("/", (req, res) => {
+  res.send("E-Learning Platform");
+});
 
 module.exports = app;

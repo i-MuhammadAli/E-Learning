@@ -6,7 +6,7 @@ const authenticateJWT = (req, res, next) => {
   if (!token) {
     return res
       .status(401)
-      .json({ message: "Access denied. No token provided." });
+      .json({ success: false, message: "Access denied. No token provided." });
   }
 
   try {
@@ -14,7 +14,7 @@ const authenticateJWT = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Invalid token" });
+    return res.status(401).json({ success: false, message: "Invalid token" });
   }
 };
 
